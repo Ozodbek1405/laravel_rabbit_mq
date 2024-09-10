@@ -1,0 +1,67 @@
+version: '3.8'
+
+services:
+    rabbit_example:
+        build:
+            dockerfile: Dockerfile
+        image: rabbit_example
+        container_name: rabbit_example
+        working_dir: /var/www/rabbit-mq
+        volumes:
+            - .:/var/www/rabbit-mq
+        depends_on:
+            - mysql-data
+            - rabbitmq
+
+    mysql-data:
+        image: mysql:8.0
+        container_name: mysql_data_rabbit
+        restart: unless-stopped
+        environment:
+            MYSQL_DATABASE: rabbit-mq
+            MYSQL_ROOT_PASSWORD: root-p
+            MYSQL_USER: rabbit-user
+            MYSQL_PASSWORD: password
+        ports:
+            - "3307:3306"
+        volumes:
+            - db_mysql_data:/var/lib/mysql
+
+    php-my-admin:
+        image: phpmyadmin/phpmyadmin
+        container_name: phpmyadmin_rabbit
+        restart: always
+        environment:
+            PMA_HOST: mysql
+            MYSQL_ROOT_PASSWORD: root-password
+        ports:
+            - "8085:80"
+        depends_on:
+            - mysql-data
+
+    rabbitmq:
+        image: rabbitmq:3-management
+        container_name: rabbitmq
+        ports:
+            - "5672:5672"
+            - "15672:15672"
+        environment:
+            RABBITMQ_DEFAULT_USER: user
+            RABBITMQ_DEFAULT_PASS: password
+        volumes:
+            - rabbitmq_data:/var/lib/rabbitmq
+
+    nginx-server:
+        image: nginx:alpine
+        container_name: nginx_rabbit
+        volumes:
+            - .:/var/www/rabbit-mq
+            - ./docker/nginx/nginx.conf:/etc/nginx/conf1.d/default1.conf
+        ports:
+            - "8083:80"
+        depends_on:
+            - rabbit_example
+
+volumes:
+    db_mysql_data:
+    rabbitmq_data:
