@@ -19,7 +19,7 @@ services:
         restart: unless-stopped
         environment:
             MYSQL_DATABASE: rabbit-mq
-            MYSQL_ROOT_PASSWORD: root-p
+            MYSQL_ROOT_PASSWORD: root-password
             MYSQL_USER: rabbit-user
             MYSQL_PASSWORD: password
         ports:
@@ -32,7 +32,7 @@ services:
         container_name: phpmyadmin_rabbit
         restart: always
         environment:
-            PMA_HOST: mysql
+            PMA_HOST: mysql_data_rabbit
             MYSQL_ROOT_PASSWORD: root-password
         ports:
             - "8085:80"
@@ -55,8 +55,8 @@ services:
         image: nginx:alpine
         container_name: nginx_server
         volumes:
-            - .:/var/www/rabbit-mq
-            - ./docker/nginx/nginx.conf:/etc/nginx1/conf.d/default.conf
+            - ./project2:/var/www/rabbit-mq
+            - ./docker/nginx/nginx.conf:/etc/nginx/conf.d/default.conf
         ports:
             - "8082:80"
         depends_on:
