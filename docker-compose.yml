@@ -53,12 +53,12 @@ services:
 
     nginx-server:
         image: nginx:alpine
-        container_name: nginx_rabbit
+        container_name: nginx_server
         volumes:
             - .:/var/www/rabbit-mq
-            - ./docker/nginx/nginx.conf:/etc/nginx/conf1.d/default1.conf
+            - ./docker/nginx/nginx.conf:/etc/nginx1/conf.d/default.conf
         ports:
-            - "8083:80"
+            - "8082:80"
         depends_on:
             - rabbit_example
 
