@@ -17,7 +17,7 @@ class Controller extends BaseController
         $message = $request->message;
         $mqService = new RabbitMQService();
         $mqService->publish($message);
-        return view('welcome');
+        return redirect()->back();
     }
 
 }
