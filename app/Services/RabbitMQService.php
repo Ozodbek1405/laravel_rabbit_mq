@@ -2,15 +2,16 @@
 
 namespace App\Services;
 
+use Exception;
 use PhpAmqpLib\Connection\AMQPStreamConnection;
 use PhpAmqpLib\Message\AMQPMessage;
 
 class RabbitMQService{
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
-    public function publish($message)
+    public function publish($message): void
     {
         $connection = new AMQPStreamConnection(env('MQ_HOST'), env('MQ_PORT'), env('MQ_USER'), env('MQ_PASS'), env('MQ_VHOST'));
         $channel = $connection->channel();
@@ -25,9 +26,9 @@ class RabbitMQService{
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
-    public function consume()
+    public function consume(): void
     {
         $connection = new AMQPStreamConnection(env('MQ_HOST'), env('MQ_PORT'), env('MQ_USER'), env('MQ_PASS'), env('MQ_VHOST'));
         $channel = $connection->channel();
